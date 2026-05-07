@@ -11,7 +11,7 @@ A browser-based mood engine that takes six answers and returns the closest emoti
 
 ## The algorithm
 
-This is a **Nearest Centroid Classifier** — each mood is pinned at a point on the plane, the user's answers produce a coordinate, and the closest pin wins. No training data, no learning phases, no special cases. Just geometry.
+This is a 2D **Nearest Centroid Classifier** — each mood is pinned at a point on the plane, the user's answers produce a coordinate, and the closest pin wins. No training data, no learning phases, no special cases.
 
 ---
 
