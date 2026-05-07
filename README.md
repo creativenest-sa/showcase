@@ -1,25 +1,5 @@
 # Mood Algorithm — How It Works
 
-**Project:** Mood Experience / Mood Mode  
-**Studio:** Plan.Net Studios  
-**Last updated:** May 2026
-
----
-
-## Status
-
-The mechanics of the algorithm are settled — how scoring and matching work is described below. What's still being decided is the content that fills it: coordinates for each answer, the mood pool itself, and the words shown back to the user. The table below tracks what's still open.
-
-| Item | What needs resolving |
-|------|----------------------|
-| Q1 Colour | 8th option name + coordinates |
-| Q3 Pulse | Final option count (5 or 8) + coordinates |
-| Q4 Texture | 2 more options + coordinates for all 6 |
-| Q5 Sound | 2 more options + coordinates for all 6 |
-| Q6 Battery | Final option count (5 or 8) + coordinates |
-| Mood pool | Finalise the full set (~12–16 moods) and place each on the map |
-| Synonym pools | Content for dynamic output variation per mood |
-
 ---
 
 ## The approach
@@ -184,5 +164,3 @@ The hybrid recovers signal that pure nearest neighbour discards: Q2's persistenc
 Start with Option A. Move to Option B only if testing shows it's needed.
 
 ---
-
-*Plan.Net Studios · May 2026*
