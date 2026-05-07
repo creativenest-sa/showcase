@@ -3,7 +3,7 @@
 A browser-based mood engine that takes six answers and returns the closest emotional state from a mapped set of moods — no server, no dependencies, one function call.
 
 **Quick links**
-- [Mood Map](MOOD-MAP.md) — all 15 moods plotted on the (energy, valence) plane
+- [Mood Map](MOOD-MAP.md) — all 17 moods plotted on the (energy, valence) plane
 - [Implementation Plan](IMPLEMENTATION-PLAN.md) — file structure, API spec, and verification steps
 - [Running the demo](#running-the-demo) — how to spin up the test harness locally
 
@@ -57,11 +57,12 @@ Every mood is placed at a specific coordinate. Illustrative layout:
                          │
         · Tender         │         · Radiant
                          │
-        · Soft           │         · Bright
-                         │
+        · Soft           │         · Alive
+                         │         · Bright
   ─────────────────── · Even ─────────────────── Energy
                        (0,0)
-        · Muted          │         · Wired
+        · Muted          │         · Frayed
+                         │         · Wired
                          │
         · Heavy          │         · Edged
                          │

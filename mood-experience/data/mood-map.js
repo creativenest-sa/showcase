@@ -10,6 +10,13 @@ export const MOOD_MAP = [
 
   // High energy + positive valence (Golden Hour zone)
   {
+    id: 'alive',
+    name: 'Alive',
+    coordinate: { energy: 2, valence: 2 },
+    tagline: 'Sharp enough to notice. Open enough to enjoy it.',
+    palette: { primary: '#E8C44E', secondary: '#F0D47A', accent: '#C4A028' },
+  },
+  {
     id: 'radiant',
     name: 'Radiant',
     coordinate: { energy: 5, valence: 5 },
@@ -62,6 +69,13 @@ export const MOOD_MAP = [
   },
 
   // High energy + negative valence (Wildfire Dusk zone)
+  {
+    id: 'frayed',
+    name: 'Frayed',
+    coordinate: { energy: 2, valence: -2 },
+    tagline: 'The edges are showing, just a little.',
+    palette: { primary: '#C47A50', secondary: '#D49A74', accent: '#A05A30' },
+  },
   {
     id: 'wired',
     name: 'Wired',

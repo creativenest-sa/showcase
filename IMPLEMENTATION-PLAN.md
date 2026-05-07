@@ -116,7 +116,7 @@ The Racing option in `pulse` scores as `{ energy: +1, valence: 0 }` — energy w
 
 ### `data/mood-map.js`
 
-Exports `MOOD_MAP` — array of 12–16 mood objects. Shape:
+Exports `MOOD_MAP` — array of 17 mood objects. Shape:
 
 ```js
 {
@@ -134,10 +134,10 @@ Exports `MOOD_MAP` — array of 12–16 mood objects. Shape:
 - A **Muted** mood at exactly `(−4, −2)` with tagline *"The volume is turned down on everything."* — needed for the verification test below.
 
 **Spread the rest** across the four quadrants:
-- **High energy + positive valence** (Golden Hour zone) — moods like Radiant, Bright, Energised
-- **Low energy + positive valence** (Soft Light zone) — moods like Tender, Calm, Peaceful
-- **High energy + negative valence** (Wildfire Dusk zone) — moods like Wired, Edged, Restless
-- **Low energy + negative valence** (Blue Hour zone) — moods like Heavy, Hollow, Withdrawn
+- **High energy + positive valence** (Golden Hour zone) — Alive, Bright, Energised, Radiant
+- **Low energy + positive valence** (Soft Light zone) — Soft, Tender, Calm, Peaceful
+- **High energy + negative valence** (Wildfire Dusk zone) — Frayed, Restless, Wired, Edged
+- **Low energy + negative valence** (Blue Hour zone) — Withdrawn, Muted, Heavy, Hollow
 
 Place pins between roughly `(±2, ±2)` and `(±5, ±5)` — closer to the centre for milder moods, further out for stronger ones.
 
@@ -226,7 +226,7 @@ The following six options must exist with these exact coordinates so the verific
 | sound | `quiet-crickets` | Quiet crickets | (−1, +1) |
 | battery | `flickering` | Flickering | (−1, −1) |
 
-For the **mood map**, generate 12–16 moods following the quadrant guidance in the file spec above. Pick palettes that feel right for each mood's emotional tone — warm hues for positive, cool/desaturated for negative.
+For the **mood map**, generate 17 moods following the quadrant guidance in the file spec above. Pick palettes that feel right for each mood's emotional tone — warm hues for positive, cool/desaturated for negative.
 
 ---
 
