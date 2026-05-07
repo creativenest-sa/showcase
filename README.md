@@ -9,6 +9,21 @@ A browser-based mood engine that takes six answers and returns the closest emoti
 
 ---
 
+## The algorithm
+
+This is a **Nearest Centroid Classifier (NCC)** operating in a 2D circumplex affect space.
+
+Each mood is a *centroid* — a pre-defined point on the plane. The user's answers produce a coordinate. The centroid with the smallest Euclidean distance to that coordinate wins. No training data, no learning, no zones — just geometry.
+
+| Algorithm | Requires training data? | How the class points are defined |
+|---|---|---|
+| KNN | Yes — labelled examples | Learned from data |
+| **Nearest Centroid Classifier** | **No** | **Pre-defined — one point per class** |
+
+The mood pins here are authored centroids, not computed ones. That's still NCC — and it's the right choice for a designed emotional space where the placement of each pin is intentional.
+
+---
+
 ## The idea in one sentence
 
 The user answers six questions. Each answer nudges a point across a 2D emotional map. Whichever mood pin is closest to where they land — that's their result.
