@@ -9,69 +9,70 @@ A browser-based mood engine that takes six answers and returns the closest emoti
 
 ---
 
-## The approach
+## The idea in one sentence
 
-Two options were considered:
-
-- **Option A — Nearest Neighbour.** Each mood is placed at a coordinate on a shared map. The user's answers produce a coordinate too. The mood closest to the user's coordinate is the result.
-- **Option B — Zone + Refinement Hybrid.** A two-step approach where coordinates first pick a broad zone, then a per-question profile picks the specific mood inside that zone.
-
-**Option A is the chosen approach.** It's simpler, has fewer edge cases, and concentrates the design work in one place — mood placement on the map — rather than spreading it across zone boundaries and per-mood profiles. The rest of this document describes Option A. Option B is documented at the end as a non-destructive fallback if Option A proves too coarse in practice.
-
----
-
-## How it works (Option A)
-
-Each answer carries an (energy, valence) coordinate. Add the six together to find where the user lands. A separate map holds every mood at its own coordinate — the mood nearest the user's position is the one returned.
-
-```
-6 answers  →  sum of coordinates  →  closest mood wins
-```
-
-The result:
-
-> **Muted.**  
-> The volume is turned down on everything.
+The user answers six questions. Each answer nudges a point across a 2D emotional map. Whichever mood pin is closest to where they land — that's their result.
 
 ---
 
 ## The two dimensions
 
-Every answer contributes to two axes:
+Every answer contributes a small vote on two axes:
 
-| Axis | Range | Meaning |
-|------|-------|---------|
-| **Energy** | −1, 0, +1 | Activation — how alive the feeling is |
-| **Valence** | −1, 0, +1 | Tone — broadly positive or negative |
+| Axis | Range | What it captures |
+|------|-------|-----------------|
+| **Energy** | −1, 0, +1 | How activated the feeling is — still and drained vs. alive and wired |
+| **Valence** | −1, 0, +1 | The tone of that feeling — dark and heavy vs. open and warm |
 
-After six questions, the user lands on a coordinate somewhere between (−6, −6) and (+6, +6).
+Six questions means six votes per axis. The user can land anywhere between (−6, −6) and (+6, +6).
 
 ---
 
 ## The mood map
 
-Every mood is placed at a specific coordinate. Illustrative layout:
+17 moods are pinned across that same plane. Stronger feelings sit near the edges; quieter ones sit near the centre. **Even** lives at (0, 0) — the genuinely neutral state.
 
 ```
-                  Positive (+valence)
-                         │
-        · Tender         │         · Radiant
-                         │
-        · Soft           │         · Alive
-                         │         · Bright
-  ─────────────────── · Even ─────────────────── Energy
-                       (0,0)
-        · Muted          │         · Frayed
-                         │         · Wired
-                         │
-        · Heavy          │         · Edged
-                         │
-                  Negative (−valence)
+                              Positive (+valence)
+                                      │
+  Peaceful  ·  (−5,+5)               │               (+ 5,+5)  · Radiant
+    Tender  ·  (−3,+4)               │               (+3,+4)   · Bright
+      Calm  ·  (−4,+3)               │               (+4,+3)   · Energised
+      Soft  ·  (−2,+2)               │               (+2,+2)   · Alive
+                                      │
+──────────────────────────────────· Even (0,0) ────────────────────────────── Energy
+                                      │
+     Muted  ·  (−4,−2)               │               (+2,−2)   · Frayed
+  Withdrawn  · (−2,−3)               │               (+3,−2)   · Restless
+     Heavy  ·  (−5,−4)               │               (+4,−3)   · Wired
+    Hollow  ·  (−3,−5)               │               (+5,−4)   · Edged
+                                      │
+                              Negative (−valence)
+
+          Low energy ◄────────────────────────────────► High energy
 ```
 
-Moods near the edges represent stronger feelings. Moods near the centre represent quieter ones. **Even** sits at (0, 0) — the genuinely neutral state, which is where a balanced answer set should land.
+The four zones:
+- **Top right** — high energy, positive tone *(Alive, Bright, Energised, Radiant)*
+- **Top left** — low energy, positive tone *(Soft, Tender, Calm, Peaceful)*
+- **Bottom right** — high energy, negative tone *(Frayed, Restless, Wired, Edged)*
+- **Bottom left** — low energy, negative tone *(Withdrawn, Muted, Heavy, Hollow)*
 
-Pin placement is the design. A wrongly placed pin shifts every nearby result, so this is where most of the careful work lives.
+Pin placement is where all the design work lives. Move a pin and every nearby result shifts with it.
+
+---
+
+## How the algorithm runs
+
+```
+6 answers  →  sum of coordinates  →  closest mood wins
+```
+
+Three steps, no special cases:
+
+1. **Translate** — look up each answer's `(energy, valence)` vote in the answer map
+2. **Sum** — add all six votes together to get one user coordinate
+3. **Find nearest** — measure Euclidean distance to every mood pin, return the closest
 
 ---
 
@@ -79,8 +80,8 @@ Pin placement is the design. A wrongly placed pin shifts every nearby result, so
 
 **Answers:** Storm Grey · Overcast · Slow and steady · Heavy wool · Quiet crickets · Flickering
 
-| Question | Answer | Coordinate |
-|----------|--------|------------|
+| Question | Answer | Vote |
+|----------|--------|------|
 | Q1 Colour | Storm Grey | (+1, −1) |
 | Q2 Sky | Overcast | (−1, −1) |
 | Q3 Pulse | Slow and steady | (−1, +1) |
@@ -89,33 +90,32 @@ Pin placement is the design. A wrongly placed pin shifts every nearby result, so
 | Q6 Battery | Flickering | (−1, −1) |
 | **Sum** | | **(−4, −2)** |
 
-User lands at (−4, −2). Euclidean distance to nearby moods:
+User lands at (−4, −2). The algorithm measures distance to every mood pin:
 
 | Mood | Coordinate | Distance |
 |------|------------|----------|
 | **Muted** | (−4, −2) | **0.00** |
-| Heavy | (−5, −3) | 1.41 |
-| Hollow | (−3, −4) | 2.24 |
-| Tender | (−3, +2) | 4.12 |
+| Heavy | (−5, −4) | 2.24 |
+| Withdrawn | (−2, −3) | 2.24 |
+| Hollow | (−3, −5) | 3.16 |
 
 Closest mood wins: **Muted.** *The volume is turned down on everything.*
 
 ---
 
-## What Option A simplifies
+## What the files do
 
-Because the algorithm is a single step — sum, then find nearest — several things that more layered designs would need simply aren't required:
-
-- **No zones.** No quadrant boundaries means no "user landed on the edge" edge cases.
-- **No tie-breaks.** A coordinate of (0, 0) lands on Even. Near-zero coordinates land on whichever mood was pinned closest. The Q2 → Q4 → Q6 cascade rule disappears.
-- **No Racing special case.** Racing scores as (+1, 0) — energy without committed tone. Surrounding answers determine which side it tilts toward, naturally. No conditional logic, no answer that depends on other answers.
-- **No refinement step.** The pin placement *is* the refinement.
-
-The whole algorithm is one function: sum coordinates, compute distances, return the nearest mood.
-
----
-
-## Modular structure
+```
+mood-experience/
+├── mood-algorithm.js        ← the front door
+├── data/
+│   ├── questions.js         ← what the user sees
+│   ├── answer-map.js        ← what each answer means numerically
+│   └── mood-map.js          ← where the 17 moods live on the plane
+└── engine/
+    ├── distance.js          ← the maths
+    └── output.js            ← shapes the result object
+```
 
 ```
 ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐
@@ -128,46 +128,115 @@ The whole algorithm is one function: sum coordinates, compute distances, return 
                                   └────────────┘
 ```
 
-- **Question data** — text, names, visuals shown to the person. No numbers.
-- **Answer map** — every option's (energy, valence) coordinate.
-- **Mood map** — every mood's coordinate, name, tagline, palette.
-- **Distance engine** — sums answers, finds closest mood. Stateless.
-- **Output builder** — assembles result from mood ID, including synonym variation.
+**`data/questions.js`** — Pure UI content. Six questions and their labelled answer options. No numbers anywhere. The only file a copywriter ever needs to touch.
 
-Each piece can change without touching the others.
+**`data/answer-map.js`** — The translation layer. Maps every option ID to an `(energy, valence)` vote. Picking "Storm Grey" gives `(+1, −1)`. Picking "Birdsong" gives `(0, +1)`. This is where the emotional meaning of each choice lives.
+
+**`data/mood-map.js`** — The destination map. 17 moods, each pinned at a coordinate, with a name, tagline, and colour palette. Moving a pin here changes what answer sets land on that mood — this is the main design lever.
+
+**`engine/distance.js`** — Two pure functions. `sumCoordinates` adds the six answer vectors. `findNearestMood` scans all 17 pins and returns the closest. No data, no state — just maths.
+
+**`engine/output.js`** — Assembles the final result object from the winning mood. The only file that knows what shape the result takes.
+
+**`mood-algorithm.js`** — The orchestrator. Imports everything, wires it together, and exposes one function: `compute(answers)`. A consumer only ever needs to import this single file.
+
+Each piece can change without touching the others — move a pin, recalibrate a vote, rename a mood — and nothing else breaks.
 
 ---
 
-## Implementation
-
-One file, pure JavaScript, no dependencies.
-
-```
-6 answers  →  mood-algorithm.js  →  result object
-```
-
-Result shape:
+## What the result looks like
 
 ```js
 {
   mood:    "Muted",
   tagline: "The volume is turned down on everything.",
-  palette: { primary, secondary, accent }
+  palette: { primary: "#6B7B8C", secondary: "#8FA0B3", accent: "#4F5C6B" }
 }
 ```
 
-Build locally with a bare HTML harness — six dropdowns, a run button, raw output on screen. Tweak the answer map, move a mood pin, hit run again. When it feels right, hand `mood-algorithm.js` to Claude Design. They import it, call one function, and build the full experience around the result. The algorithm runs entirely in the browser — no server, no database.
+The algorithm runs entirely in the browser. No server, no database, no build step.
+
+---
+
+## The map as a mood wheel — colour and motion
+
+Because this is a spatial algorithm — not a weighted score — it naturally supports something a scoring system can't: **continuous colour and motion driven by where the user actually lands on the plane.**
+
+### The plane is already a mood wheel
+
+The energy/valence coordinate system is structurally identical to the Russell Circumplex Model of affect — the same model that underlies most mood wheels in psychology. That's not a coincidence. The four quadrants map directly:
+
+```
+             calm · peaceful · tender · soft
+                  (low energy, positive)
+                          │
+  heavy · hollow    ──────┼──────   alive · bright · radiant
+  withdrawn · muted       │         energised
+  (low energy, neg)      Even      (high energy, pos)
+                          │
+             frayed · restless · wired · edged
+                  (high energy, negative)
+```
+
+Arranged radially this becomes a wheel. The algorithm is already doing wheel-navigation — it just presents it as a grid.
+
+### Colour blending between neighbors
+
+The algorithm currently returns the winning mood's palette. But the user rarely lands exactly on a pin — they land *between* pins. That distance data is already in the output.
+
+By surfacing the top 3 nearest moods alongside their distances, the UI layer can blend palettes proportionally:
+
+```
+user lands between Alive (dist 0.8) and Bright (dist 1.4) and Energised (dist 1.6)
+  → primary colour = weighted blend of their three primaries
+  → the closer the mood, the more it dominates the blend
+```
+
+This means colours never hard-cut between states. Someone sitting halfway between Alive and Frayed gets a colour that is literally halfway between those two palettes. The map becomes a continuous colour field, not 17 discrete buckets.
+
+### Gradient direction and motion intensity
+
+Two values fall out of the user coordinate for free:
+
+| Value | Formula | What it drives |
+|---|---|---|
+| **Angle** | `atan2(valence, energy)` | Direction of a gradient or rotation — points toward the emotional zone the user is in |
+| **Intensity** | `√(energy² + valence²) ÷ 6` | Normalised 0–1 distance from centre — drives animation speed, saturation, or gradient boldness |
+
+Someone landing at (−4, −2) has an angle pointing toward the low-energy negative zone and a high intensity — a slow, desaturated, heavy gradient. Someone at (+4, +3) gets a fast, warm, saturated one pointing toward the golden-hour zone. **Even** at (0, 0) produces zero intensity — still, neutral, no motion.
+
+### What this means for the algorithm
+
+The core logic doesn't change. The only addition needed is surfacing the nearest neighbors in the output alongside the winner:
+
+```js
+{
+  mood:      "Alive",
+  tagline:   "Sharp enough to notice. Open enough to enjoy it.",
+  palette:   { primary, secondary, accent },     // winning mood — use as base
+  neighbors: [                                    // next two closest, for blending
+    { mood: "Bright",    distance: 2.24, palette: { ... } },
+    { mood: "Energised", distance: 2.24, palette: { ... } },
+  ],
+  motion: {
+    angle:     45,      // degrees — gradient rotation direction
+    intensity: 0.47,    // 0 (centre/still) → 1 (edge/strong)
+  }
+}
+```
+
+The UI layer has everything it needs. The algorithm stays a single nearest-neighbour lookup — the spatial richness is already baked in.
 
 ---
 
 ## Option B — Zone + Refinement Hybrid (alternative)
 
-If Option A proves too coarse in practice — for example, if multiple moods cluster at similar coordinates and results in that region feel arbitrary — Option B is the next step up:
+If the nearest-neighbour approach ever feels too coarse — for example, if multiple moods cluster at similar coordinates and results in that region feel arbitrary — Option B is the next step up:
 
 1. Use the (energy, valence) sum to pick a broad zone.
 2. Within the zone, score each candidate mood against the user's per-question answers using a profile vector. Lowest distance wins.
 
-The hybrid recovers signal that pure nearest neighbour discards: Q2's persistence, Q3's body-vs-mind, Q5's outward-vs-inward orientation. The cost is real — every mood needs a profile across all six questions — but the path is non-destructive. Only the distance engine changes; the answer map, mood map, question data, and output builder are unaffected.
+Only the distance engine would change — the answer map, mood map, question data, and output builder are all unaffected.
 
 Start with Option A. Move to Option B only if testing shows it's needed.
 
