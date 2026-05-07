@@ -162,5 +162,3 @@ If Option A proves too coarse in practice — for example, if multiple moods clu
 The hybrid recovers signal that pure nearest neighbour discards: Q2's persistence, Q3's body-vs-mind, Q5's outward-vs-inward orientation. The cost is real — every mood needs a profile across all six questions — but the path is non-destructive. Only the distance engine changes; the answer map, mood map, question data, and output builder are unaffected.
 
 Start with Option A. Move to Option B only if testing shows it's needed.
-
----
