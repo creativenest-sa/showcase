@@ -2,6 +2,23 @@
 
 ---
 
+## Running the demo
+
+```bash
+cd mood-experience
+python3 -m http.server 3000
+```
+
+Then open **http://localhost:3000/test.html** in your browser.
+
+- **Run** — computes a result from your six selected answers
+- **Load worked example** — fills in the canonical test case and runs it (should return *Muted*, distance 0)
+- **Reset** — clears all answers
+
+Stop the server with `Ctrl+C`.
+
+---
+
 ## The approach
 
 Two options were considered:
