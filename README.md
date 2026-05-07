@@ -2,23 +2,6 @@
 
 ---
 
-## Running the demo
-
-```bash
-cd mood-experience
-python3 -m http.server 3000
-```
-
-Then open **http://localhost:3000/test.html** in your browser.
-
-- **Run** — computes a result from your six selected answers
-- **Load worked example** — fills in the canonical test case and runs it (should return *Muted*, distance 0)
-- **Reset** — clears all answers
-
-Stop the server with `Ctrl+C`.
-
----
-
 ## The approach
 
 Two options were considered:
@@ -179,3 +162,20 @@ If Option A proves too coarse in practice — for example, if multiple moods clu
 The hybrid recovers signal that pure nearest neighbour discards: Q2's persistence, Q3's body-vs-mind, Q5's outward-vs-inward orientation. The cost is real — every mood needs a profile across all six questions — but the path is non-destructive. Only the distance engine changes; the answer map, mood map, question data, and output builder are unaffected.
 
 Start with Option A. Move to Option B only if testing shows it's needed.
+
+---
+
+## Running the demo
+
+```bash
+cd mood-experience
+python3 -m http.server 3000
+```
+
+Then open **http://localhost:3000/test.html** in your browser.
+
+- **Run** — computes a result from your six selected answers
+- **Load worked example** — fills in the canonical test case and runs it (should return *Muted*, distance 0)
+- **Reset** — clears all answers
+
+Stop the server with `Ctrl+C`.
