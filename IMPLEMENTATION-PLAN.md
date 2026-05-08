@@ -1,12 +1,12 @@
 # Implementation Plan — Mood Algorithm
 
-**Build:** Option A (Nearest Neighbour) implementation of the mood algorithm, packaged as a self-contained "lego block" plus a bare HTML harness for testing.
+**Approach:** Nearest Centroid Classifier operating in a 2D affect space, packaged as a self-contained module plus a bare HTML harness for testing.
 
 The algorithm takes six answers and returns a result object containing a mood name, tagline, and colour palette. It runs entirely in the browser. No npm dependencies, no build step, no bundler.
 
 ---
 
-## File structure to create
+## File structure
 
 ```
 mood-experience/
@@ -30,7 +30,7 @@ All files use ES modules (`export` / `import`).
 Three steps. No zones, no tie-breaks, no special cases.
 
 1. **Look up coordinates.** Each of the six answers has an (energy, valence) coordinate stored in the answer map. Energy and valence each take values of `−1`, `0`, or `+1`.
-2. **Sum.** Add all six coordinates into a single user coordinate. Range is roughly (−6, −6) to (+6, +6).
+2. **Sum.** Add all six coordinates into a single user coordinate. Range is (−6, −6) to (+6, +6).
 3. **Find nearest.** Each mood is pinned at a coordinate on the same plane. Return the mood with the smallest Euclidean distance from the user's coordinate.
 
 ---
@@ -68,7 +68,7 @@ Returns:
 }
 ```
 
-`compute()` must throw a clear error for unknown question or option IDs.
+`compute()` throws a clear error for unknown question or option IDs.
 
 ---
 
@@ -112,8 +112,6 @@ Exports `ANSWER_MAP` — nested lookup:
 
 `ANSWER_MAP[questionId][optionId]` returns `{ energy, valence }` where each is `−1`, `0`, or `+1`.
 
-The Racing option in `pulse` scores as `{ energy: +1, valence: 0 }` — energy without committed tone. No conditional logic; surrounding answers tilt the result naturally.
-
 ### `data/mood-map.js`
 
 Exports `MOOD_MAP` — array of 17 mood objects. Shape:
@@ -128,18 +126,15 @@ Exports `MOOD_MAP` — array of 17 mood objects. Shape:
 }
 ```
 
-**Required pins:**
+17 moods across four quadrants, balanced 8 high-energy / 8 low-energy / 1 centre:
 
-- An **Even** mood at exactly `(0, 0)` — what balanced answer sets land on.
-- A **Muted** mood at exactly `(−4, −2)` with tagline *"The volume is turned down on everything."* — needed for the verification test below.
+- **High energy + positive valence** (Golden Hour zone) — Alive (+2,+2), Bright (+3,+4), Energised (+4,+3), Radiant (+5,+5)
+- **Low energy + positive valence** (Soft Light zone) — Soft (−2,+2), Tender (−3,+4), Calm (−4,+3), Peaceful (−5,+5)
+- **High energy + negative valence** (Wildfire Dusk zone) — Frayed (+2,−2), Restless (+3,−2), Wired (+4,−3), Edged (+5,−4)
+- **Low energy + negative valence** (Blue Hour zone) — Withdrawn (−2,−3), Muted (−4,−2), Heavy (−5,−4), Hollow (−3,−5)
+- **Centre** — Even (0,0)
 
-**Spread the rest** across the four quadrants:
-- **High energy + positive valence** (Golden Hour zone) — Alive, Bright, Energised, Radiant
-- **Low energy + positive valence** (Soft Light zone) — Soft, Tender, Calm, Peaceful
-- **High energy + negative valence** (Wildfire Dusk zone) — Frayed, Restless, Wired, Edged
-- **Low energy + negative valence** (Blue Hour zone) — Withdrawn, Muted, Heavy, Hollow
-
-Place pins between roughly `(±2, ±2)` and `(±5, ±5)` — closer to the centre for milder moods, further out for stronger ones.
+Pins range from (±2, ±2) at the mild end to (±5, ±5) at the strongest. See [MOOD-MAP.md](MOOD-MAP.md) for the full reference table and diagram.
 
 ### `engine/distance.js`
 
@@ -156,7 +151,7 @@ export function findNearestMood(userCoord, moodMap)
 // returns:   { mood: <nearest mood object>, distance: <number> }
 ```
 
-Use Euclidean distance. `findNearestMood` should throw if the mood map is empty.
+Uses Euclidean distance. `findNearestMood` throws if the mood map is empty.
 
 ### `engine/output.js`
 
@@ -176,57 +171,23 @@ The entry point.
 - Imports `ANSWER_MAP` and `MOOD_MAP` from the data files.
 - Imports `sumCoordinates` and `findNearestMood` from `engine/distance.js`.
 - Imports `buildResult` from `engine/output.js`.
-- Exports `compute(answers)` — orchestrates the three steps. No logic of its own beyond input validation and wiring.
-- Re-exports `QUESTIONS` and `MOOD_MAP` so consumers (like the test harness) only need to import this one file.
+- Exports `compute(answers)` — orchestrates the three steps. No logic beyond input validation and wiring.
+- Re-exports `QUESTIONS` and `MOOD_MAP` so consumers only need to import this one file.
 
 ### `test.html`
 
 Bare HTML test harness. No design, no animations.
-
-Layout:
-- Page title and a one-line subtitle
-- Six dropdowns (one per question), populated dynamically from `QUESTIONS`
-- Three buttons: **Run**, **Load worked example**, **Reset**
-- Result panel showing: mood name, tagline, three colour swatches (primary / secondary / accent), and the `debug` JSON pretty-printed
-
-Use `<script type="module">` to import from `mood-algorithm.js`. Show a clear error message if the user hits Run without picking all six answers.
-
-The "Load worked example" button fills in the canonical case from the verification section below and runs it.
-
-Add a comment at the top of `test.html`:
 
 ```html
 <!-- Run with: cd mood-experience && python3 -m http.server 8000 -->
 <!-- Then open: http://localhost:8000/test.html -->
 ```
 
----
-
-## Placeholder content
-
-The data files need plausible placeholder content so the harness runs end-to-end. The content team will replace it before launch.
-
-For **questions and answer map**, generate options that fit each question's theme, with coordinates that reflect their meaning. Example calibrations:
-
-- Q1 Colour — warm/vivid colours lean positive, cool/dark lean negative; saturated colours lean high-energy
-- Q2 Sky — clear/bright skies positive, overcast/storm negative; storms high-energy, twilight low-energy
-- Q3 Pulse — still/slow are low-energy, racing/quickened are high-energy; tone is mostly neutral
-- Q4 Texture — soft/silk positive, heavy/cold negative; bristled is high-energy, wool is low-energy
-- Q5 Sound — birdsong/crickets positive, static/heartbeat negative; silence is low-energy
-- Q6 Battery — full positive/high, drained negative/low
-
-The following six options must exist with these exact coordinates so the verification test passes:
-
-| Question | Option ID | Label | (Energy, Valence) |
-|----------|-----------|-------|-------------------|
-| colour | `storm-grey` | Storm Grey | (+1, −1) |
-| sky | `overcast` | Overcast | (−1, −1) |
-| pulse | `slow-and-steady` | Slow and steady | (−1, +1) |
-| texture | `heavy-wool` | Heavy wool | (−1, −1) |
-| sound | `quiet-crickets` | Quiet crickets | (−1, +1) |
-| battery | `flickering` | Flickering | (−1, −1) |
-
-For the **mood map**, generate 17 moods following the quadrant guidance in the file spec above. Pick palettes that feel right for each mood's emotional tone — warm hues for positive, cool/desaturated for negative.
+Layout:
+- Page title and a one-line subtitle
+- Six dropdowns (one per question), populated dynamically from `QUESTIONS`
+- Three buttons: **Run**, **Load worked example**, **Reset**
+- Result panel showing: mood name, tagline, three colour swatches (primary / secondary / accent), and the `debug` JSON pretty-printed
 
 ---
 
@@ -241,7 +202,7 @@ The build is correct if all of the following hold:
    - user coordinate: **(−4, −2)**
    - mood coordinate: **(−4, −2)**
    - distance: **0**
-3. Picking all warm/positive answers produces a result in the high-energy positive area (mood name should be one of Radiant / Bright / Energised or similar).
+3. Picking all warm/positive answers produces a result in the high-energy positive zone (Alive / Bright / Energised / Radiant).
 4. Calling `compute()` with an unknown question or option ID throws a clear, descriptive error.
 5. The harness shows a useful error message if Run is clicked with answers missing.
 
