@@ -13,6 +13,8 @@ A browser-based mood engine that takes six answers and returns the closest emoti
 
 This is a **Nearest Centroid Classifier** — each mood is pinned at a point on the plane, the user's answers produce a coordinate, and the closest pin wins. No training data, no learning phases, no special cases. Just geometry.
 
+Because the algorithm is purely spatial, additional dimensions can be added (e.g. a third axis for clarity or sleep quality). Each new dimension requires answer votes and mood pin coordinates for that axis — the distance calculation gains one more term. The mood map and answer map are the only files affected.
+
 ---
 
 ## The idea in one sentence
