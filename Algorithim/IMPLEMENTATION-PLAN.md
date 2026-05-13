@@ -219,7 +219,3 @@ The five-module split exists so each concern can change independently:
 - Changing result shape → only `output.js` changes
 
 Keep this separation strictly. The engine files must not import from the data files. The data files must not contain logic. `mood-algorithm.js` is the only file that imports from both sides.
-
----
-
-*Plan.Net Studios · May 2026*
