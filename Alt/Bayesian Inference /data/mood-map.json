@@ -1,0 +1,138 @@
+[
+  {
+    "id": "radiant",
+    "name": "Radiant",
+    "coordinate": { "energy": 5, "valence": 5, "clarity": 2 },
+    "zone": "Golden Hour",
+    "tagline": "Open, warm, spilling over a little.",
+    "palette": ["#F5C842", "#F0A840", "#E87830"]
+  },
+  {
+    "id": "bright",
+    "name": "Bright",
+    "coordinate": { "energy": 3, "valence": 4, "clarity": 3 },
+    "zone": "Golden Hour",
+    "tagline": "Something just clicked. You're on.",
+    "palette": ["#F8C060", "#E8A030", "#D08020"]
+  },
+  {
+    "id": "energised",
+    "name": "Energised",
+    "coordinate": { "energy": 4, "valence": 3, "clarity": 3 },
+    "zone": "Golden Hour",
+    "tagline": "Present in your body. Switched on.",
+    "palette": ["#F0884A", "#E06030", "#C84018"]
+  },
+  {
+    "id": "alive",
+    "name": "Alive",
+    "coordinate": { "energy": 2, "valence": 2, "clarity": 1 },
+    "zone": "Golden Hour",
+    "tagline": "Light, buzzy, slightly restless in a good way.",
+    "palette": ["#E8A048", "#D07828", "#B85810"]
+  },
+  {
+    "id": "peaceful",
+    "name": "Peaceful",
+    "coordinate": { "energy": -5, "valence": 5, "clarity": 2 },
+    "zone": "Morning Mist",
+    "tagline": "Nothing to prove. Quietly okay.",
+    "palette": ["#A8D8C8", "#78B8A8", "#488878"]
+  },
+  {
+    "id": "tender",
+    "name": "Tender",
+    "coordinate": { "energy": -3, "valence": 4, "clarity": -1 },
+    "zone": "Morning Mist",
+    "tagline": "Feeling a lot, and close to the surface.",
+    "palette": ["#C0C8E8", "#A0A8C8", "#8088A8"]
+  },
+  {
+    "id": "calm",
+    "name": "Calm",
+    "coordinate": { "energy": -4, "valence": 3, "clarity": 2 },
+    "zone": "Morning Mist",
+    "tagline": "Calm without effort. Just here.",
+    "palette": ["#90C8B8", "#60A898", "#308878"]
+  },
+  {
+    "id": "soft",
+    "name": "Soft",
+    "coordinate": { "energy": -2, "valence": 2, "clarity": -1 },
+    "zone": "Morning Mist",
+    "tagline": "Unhurried. Letting things land slowly.",
+    "palette": ["#B8C8D8", "#98A8C8", "#7888A8"]
+  },
+  {
+    "id": "even",
+    "name": "Even",
+    "coordinate": { "energy": 0, "valence": 0, "clarity": 0 },
+    "zone": "Dead Calm",
+    "tagline": "In between. Not quite one thing or another.",
+    "palette": ["#9898A8", "#787888", "#585868"]
+  },
+  {
+    "id": "edged",
+    "name": "Edged",
+    "coordinate": { "energy": 5, "valence": -4, "clarity": 2 },
+    "zone": "Wildfire Dusk",
+    "tagline": "Something's building. You feel it everywhere.",
+    "palette": ["#C84838", "#A82818", "#880808"]
+  },
+  {
+    "id": "wired",
+    "name": "Wired",
+    "coordinate": { "energy": 4, "valence": -3, "clarity": 1 },
+    "zone": "Wildfire Dusk",
+    "tagline": "Can't quite land. Body ahead of your mind.",
+    "palette": ["#C85828", "#A84010", "#883000"]
+  },
+  {
+    "id": "restless",
+    "name": "Restless",
+    "coordinate": { "energy": 3, "valence": -2, "clarity": -1 },
+    "zone": "Wildfire Dusk",
+    "tagline": "Too many tabs open. Edges coming loose.",
+    "palette": ["#A87858", "#886040", "#685030"]
+  },
+  {
+    "id": "frayed",
+    "name": "Frayed",
+    "coordinate": { "energy": 2, "valence": -2, "clarity": -2 },
+    "zone": "Wildfire Dusk",
+    "tagline": "A lot building. Not sure where it's going.",
+    "palette": ["#988870", "#786858", "#584840"]
+  },
+  {
+    "id": "muted",
+    "name": "Muted",
+    "coordinate": { "energy": -4, "valence": -2, "clarity": -2 },
+    "zone": "Blue Hour",
+    "tagline": "The volume is turned down on everything.",
+    "palette": ["#283858", "#182848", "#081838"]
+  },
+  {
+    "id": "heavy",
+    "name": "Heavy",
+    "coordinate": { "energy": -5, "valence": -4, "clarity": -1 },
+    "zone": "Blue Hour",
+    "tagline": "Everything takes more than usual right now.",
+    "palette": ["#304060", "#204050", "#103040"]
+  },
+  {
+    "id": "hollow",
+    "name": "Hollow",
+    "coordinate": { "energy": -3, "valence": -5, "clarity": -3 },
+    "zone": "Blue Hour",
+    "tagline": "Going through the motions. Something missing.",
+    "palette": ["#404858", "#303848", "#202838"]
+  },
+  {
+    "id": "withdrawn",
+    "name": "Withdrawn",
+    "coordinate": { "energy": -2, "valence": -3, "clarity": -2 },
+    "zone": "Blue Hour",
+    "tagline": "Hard to see far ahead. Unclear and a bit stuck.",
+    "palette": ["#485870", "#384860", "#283850"]
+  }
+]
