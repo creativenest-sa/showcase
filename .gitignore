@@ -5,3 +5,19 @@
 ._*
 .Spotlight-V100
 .Trashes
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.swp
+
+# Claude
+.claude/
+
+# Logs & local data
+*.log
+
+# Environment
+.env
+.env.local
